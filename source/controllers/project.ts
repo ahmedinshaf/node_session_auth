@@ -10,6 +10,7 @@ const createProject = async (req: Request, res: Response, next: NextFunction) =>
             author,
             title
         });
+        console.log(project);
 
         await project.save();
         return res.send(project);
@@ -21,7 +22,7 @@ const createProject = async (req: Request, res: Response, next: NextFunction) =>
 const getAllProjects = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const projects = await Project.find();
-        res.send(projects);
+        res.send('projects');
     } catch (e) {}
 };
 

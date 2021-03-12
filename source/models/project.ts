@@ -16,4 +16,4 @@ ProjectSchema.post<IProject>('save', function () {
     logging.info('Mongo', 'Checkout the book we just saved: ', this);
 });
 
-export default mongoose.model<IProject>('Book', ProjectSchema);
+export default mongoose.model<IProject>('Projects', ProjectSchema);

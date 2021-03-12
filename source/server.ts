@@ -1,18 +1,20 @@
 import http from 'http';
 import express from 'express';
+import connectRedis from 'connect-redis';
+import session from 'express-session';
+import Redis from 'ioredis';
 import logging from './config/logging';
-import projectRoutes from './routes/project';
+
 import mongoose from 'mongoose';
+import { createApp } from './app';
+import { MONGO_URI, MONGO_OPTIONS, REDIS_OPTIONS } from './config';
 
 const NAMESPACE = 'Stablo API';
-const router = express();
+var router = express.Router();
 
 /** Connect to Mongo */
 mongoose
-    .connect('mongodb+srv://inshaf:127149@cluster0.t0rre.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
+    .connect(MONGO_URI, MONGO_OPTIONS)
     .then((result) => {
         logging.info(NAMESPACE, 'Mongo Connected');
     })
@@ -20,8 +22,12 @@ mongoose
         logging.error(NAMESPACE, error.message, error);
     });
 
+const RedisStore = connectRedis(session);
+const client = new Redis(REDIS_OPTIONS);
+const store = new RedisStore({ client });
+const app = createApp(store);
 /** Log the request */
-router.use((req, res, next) => {
+app.use((req, res, next) => {
     /** Log the req */
     logging.info(NAMESPACE, `METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
 
@@ -36,7 +42,7 @@ router.use((req, res, next) => {
 router.use(express.json());
 
 /** Rules of our API */
-router.use((req, res, next) => {
+app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 
@@ -49,17 +55,10 @@ router.use((req, res, next) => {
 });
 
 /** Routes go here */
-router.use('/api/projects', projectRoutes);
+// app.get('/', (req, res) => res.send('Hello'));
+// app.use('/api/projects', projectRoutes);
+// app.use('/api/auth', authRoutes);
 
-/** Error handling */
-router.use((req, res, next) => {
-    const error = new Error('Not found');
-
-    res.status(404).json({
-        message: error.message
-    });
-});
-
-const httpServer = http.createServer(router);
+const httpServer = http.createServer(app);
 
 httpServer.listen(3000, () => logging.info(NAMESPACE, `Server is running `));
