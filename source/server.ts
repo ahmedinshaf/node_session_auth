@@ -58,7 +58,7 @@ app.use((req, res, next) => {
 // app.get('/', (req, res) => res.send('Hello'));
 // app.use('/api/projects', projectRoutes);
 // app.use('/api/auth', authRoutes);
-
+const PORT = process.env.PORT || 3000;
 const httpServer = http.createServer(app);
 
-httpServer.listen(3000, () => logging.info(NAMESPACE, `Server is running `));
+httpServer.listen(PORT, () => logging.info(NAMESPACE, `Server is running `));
