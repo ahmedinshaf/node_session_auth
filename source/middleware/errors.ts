@@ -2,7 +2,7 @@ import { RequestHandler, Request, Response, NextFunction } from 'express';
 
 export const catchAsync = (handler: RequestHandler) => (...args: [Request, Response, NextFunction]) => handler(...args);
 
-export const notFound = (req: Request, res: Response, next: NextFunction) => res.status(404).json({ message: 'Not Found dd' });
+export const notFound = (req: Request, res: Response, next: NextFunction) => res.status(404).json({ message: 'Route Not Found' });
 
 export const serverError = (err: any, req: Request, res: Response, next: NextFunction) => {
     if (!err.status) {

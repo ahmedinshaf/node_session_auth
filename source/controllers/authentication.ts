@@ -7,38 +7,34 @@ import { logIn, logOut } from '../auth';
 import { catchAsync } from '../middleware';
 
 const register = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        await validate(registerSchema, req.body);
+    await validate(registerSchema, req.body);
 
-        const { email, name, password } = req.body;
+    const { email, name, password } = req.body;
 
-        const found = await User.exists({ email });
+    const found = await User.exists({ email });
 
-        if (found) {
-            throw new BadRequest('Invalid email');
-        }
-
-        const user = await User.create({
-            email,
-            name,
-            password
-        });
-
-        logIn(req, user.id);
-
-        const link = user.verificationUrl();
-
-        // await sendMail({
-        //     to: email,
-        //     subject: 'Verify your email address',
-        //     text: link
-        // });
-        console.log(req.session);
-
-        res.json({ message: 'OK' });
-    } catch (e) {
-        console.log(e);
+    if (found) {
+        throw new BadRequest('Invalid email');
     }
+
+    const user = await User.create({
+        email,
+        name,
+        password
+    });
+
+    logIn(req, user.id);
+
+    const link = user.verificationUrl();
+
+    // await sendMail({
+    //     to: email,
+    //     subject: 'Verify your email address',
+    //     text: link
+    // });
+    console.log(req.session);
+
+    res.json({ message: 'OK' });
 };
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
