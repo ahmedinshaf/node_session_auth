@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "source/server.ts",
+  "engines": { "node": "14.16.0" },
   "scripts": {
     "start": "node dist/server.js",
-    "build": "rm -rf dist && source/ && tsc",
+    "build": "tsc",
     "dev": "nodemon source/server.ts"
   },
   "author": "",
