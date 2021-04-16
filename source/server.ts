@@ -16,7 +16,7 @@ var router = express.Router();
 mongoose
     .connect(MONGO_URI, MONGO_OPTIONS)
     .then((result) => {
-        logging.info(NAMESPACE, 'Mongo Connected');
+        logging.info(NAMESPACE, 'Mongo Connected ☀️ 🌠 ✔️');
     })
     .catch((error) => {
         logging.error(NAMESPACE, error.message, error);
@@ -29,11 +29,11 @@ const app = createApp(store);
 /** Log the request */
 app.use((req, res, next) => {
     /** Log the req */
-    logging.info(NAMESPACE, `METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
+    logging.info(NAMESPACE, `➡ METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
 
     res.on('finish', () => {
         /** Log the res */
-        logging.info(NAMESPACE, `METHOD: [${req.method}] - URL: [${req.url}] - STATUS: [${res.statusCode}] - IP: [${req.socket.remoteAddress}]`);
+        logging.info(NAMESPACE, `➡️ METHOD: [${req.method}] - URL: [${req.url}] - STATUS: [${res.statusCode}] - IP: [${req.socket.remoteAddress}]`);
     });
 
     next();
@@ -61,4 +61,4 @@ app.use((req, res, next) => {
 const PORT = process.env.PORT || 3000;
 const httpServer = http.createServer(app);
 
-httpServer.listen(PORT, () => logging.info(NAMESPACE, `Server is running `));
+httpServer.listen(PORT, () => logging.info(NAMESPACE, `Server is running 🆗`));
